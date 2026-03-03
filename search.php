@@ -46,7 +46,8 @@ if (!empty($query)) {
             <div class="results-header">
                 <!-- VULNERABLE: $query is echoed without htmlspecialchars() -->
                 <!-- FIX: echo htmlspecialchars($query, ENT_QUOTES, 'UTF-8'); -->
-                <h2>Search results for: <?php echo $query; ?></h2>
+               <h2>Search results for: <?php echo htmlspecialchars($query, ENT_QUOTES, 'UTF-8'); ?></h2>
+        
             </div>
 
             <div class="product-grid">
