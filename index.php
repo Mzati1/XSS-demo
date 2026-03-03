@@ -1,3 +1,14 @@
+<?php
+session_start();
+require_once 'db.php';
+
+$products = [];
+$res = $db->query("SELECT * FROM products");
+while ($row = $res->fetchArray(SQLITE3_ASSOC)) {
+    $products[] = $row;
+}
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -13,8 +24,12 @@
             <nav>
                 <ul>
                     <li><a href="index.php">Home</a></li>
-                    <li><a href="#">Products</a></li>
-                    <li><a href="#">Contact</a></li>
+                    <?php if (isset($_SESSION['username'])): ?>
+                        <li><a href="profile.php">Profile</a></li>
+                        <li><a href="logout.php">Logout (<?php echo $_SESSION['username']; ?>)</a></li>
+                    <?php else: ?>
+                        <li><a href="login.php">Login</a></li>
+                    <?php endif; ?>
                 </ul>
             </nav>
         </div>
@@ -32,21 +47,13 @@
         <section class="featured">
             <h3>Featured Products</h3>
             <div class="product-grid">
-                <div class="product-card">
-                    <img src="https://via.placeholder.com/150" alt="Product 1">
-                    <h4>Smart Watch X</h4>
-                    <p>$199.99</p>
-                </div>
-                <div class="product-card">
-                    <img src="https://via.placeholder.com/150" alt="Product 2">
-                    <h4>Noise Cancelling Headphones</h4>
-                    <p>$299.99</p>
-                </div>
-                <div class="product-card">
-                    <img src="https://via.placeholder.com/150" alt="Product 3">
-                    <h4>Ultra Laptop Pro</h4>
-                    <p>$1299.99</p>
-                </div>
+                <?php foreach ($products as $product): ?>
+                    <div class="product-card">
+                        <img src="<?php echo $product['image_url']; ?>" alt="<?php echo $product['name']; ?>">
+                        <h4><?php echo $product['name']; ?></h4>
+                        <p>$<?php echo $product['price']; ?></p>
+                    </div>
+                <?php endforeach; ?>
             </div>
         </section>
     </main>

