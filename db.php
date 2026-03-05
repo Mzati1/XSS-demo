@@ -29,18 +29,18 @@ $db->exec("CREATE TABLE IF NOT EXISTS comments (
 $res = $db->querySingle("SELECT COUNT(*) FROM users");
 if ($res == 0) {
     $db->exec("INSERT INTO users (username, password, full_name, email) VALUES 
-        ('admin', 'admin123', 'System Administrator', 'admin@gadgetstore.lab'),
-        ('victim', 'password123', 'John Doe', 'john@example.lab')");
+        ('admin', 'admin123', 'System Administrator', 'admin@gadgetstore.mw'),
+        ('victim', 'password123', 'John Doe', 'john@example.mw')");
 }
 
 $res = $db->querySingle("SELECT COUNT(*) FROM products");
 if ($res == 0) {
     $db->exec("INSERT INTO products (name, price, description, image_url) VALUES 
-        ('Smart Watch X', 199.99, 'Advanced fitness tracker and notifications.', 'https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=300'),
-        ('Noise Cancelling Headphones', 299.99, 'Immersive sound with active noise cancellation.', 'https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=300'),
-        ('Ultra Laptop Pro', 1299.99, 'High performance for creators and pros.', 'https://images.unsplash.com/photo-1496181133206-80ce9b88a853?w=300'),
-        ('Wireless Gaming Mouse', 79.99, 'Precision and speed for gaming enthusiasts.', 'https://images.unsplash.com/photo-1527814050087-379371549a18?w=300'),
-        ('Mechanical Keyboard RGB', 149.99, 'Customizable switches and backlighting.', 'https://images.unsplash.com/photo-1511467687858-23d96c32e4ae?w=300'),
-        ('4K Ultra HD Monitor', 499.99, 'Stunning visuals for your workspace.', 'https://images.unsplash.com/photo-1527443224154-c4a3942d3acf?w=300')");
+        ('Smart Watch X', 150000, 'Advanced fitness tracker and notifications.', 'https://images.unsplash.com/photo-1508685096489-7aacd43bd3b1?w=600&auto=format&fit=crop'),
+        ('Noise Cancelling Headphones', 250000, 'Immersive sound with active noise cancellation.', 'https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=600&auto=format&fit=crop'),
+        ('Ultra Laptop Pro', 1200000, 'High performance for creators and pros.', 'https://images.unsplash.com/photo-1496181133206-80ce9b88a853?w=600&auto=format&fit=crop'),
+        ('Wireless Gaming Mouse', 45000, 'Precision and speed for gaming enthusiasts.', 'https://images.unsplash.com/photo-1615663248861-2446a855502a?w=600&auto=format&fit=crop'),
+        ('Mechanical Keyboard RGB', 95000, 'Customizable switches and backlighting.', 'https://images.unsplash.com/photo-1511467687858-23d96c32e4ae?w=600&auto=format&fit=crop'),
+        ('4K Ultra HD Monitor', 400000, 'Stunning visuals for your workspace.', 'https://images.unsplash.com/photo-1527443224154-c4a3942d3acf?w=600&auto=format&fit=crop')");
 }
 ?>

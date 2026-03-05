@@ -45,7 +45,7 @@ while ($row = $res->fetchArray(SQLITE3_ASSOC)) {
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
 </head>
-<body>
+<body class="d-flex flex-column min-vh-100">
     <nav class="navbar navbar-expand-lg navbar-dark shadow-sm">
         <div class="container">
             <a class="navbar-brand fw-bold" href="index.php">Gadget Store</a>
@@ -68,27 +68,32 @@ while ($row = $res->fetchArray(SQLITE3_ASSOC)) {
     </nav>
 
     <main class="container py-5">
-        <div id="welcome-message" class="mb-4 fw-bold text-success"></div>
-        <!-- VULNERABLE -->
-        <script>
-            const hash = window.location.hash;
-            if (hash.startsWith('#name=')) {
-                const name = decodeURIComponent(hash.split('=')[1]);
-                document.getElementById('welcome-message').innerHTML = "Welcome back, " + name + "!";
-                // FIX: document.getElementById('welcome-message').textContent = "Welcome back, " + name + "!";
-            }
-        </script>
+        <div class="row">
+            <div class="col-12">
+                <!-- DOM-BASED XSS VULNERABILITY -->
+                <div id="promo-banner" class="mb-4"></div>
+                <!-- VULNERABLE -->
+                <script>
+                    const urlParams = new URLSearchParams(window.location.search);
+                    const promo = urlParams.get('promo');
+                    if (promo) {
+                        document.getElementById('promo-banner').innerHTML = '<div class="alert alert-warning"><strong>Special Offer:</strong> ' + promo + '</div>';
+                        // FIX: document.getElementById('promo-banner').textContent = 'Special Offer: ' + promo;
+                    }
+                </script>
+            </div>
+        </div>
 
-        <section class="product-detail bg-white p-4 rounded shadow-sm mb-5">
-            <div class="row g-5 align-items-center">
-                <div class="col-md-6">
-                    <img src="<?php echo $product['image_url']; ?>" alt="<?php echo $product['name']; ?>" class="img-fluid rounded shadow-sm">
+        <section class="product-detail bg-white p-3 p-md-5 rounded shadow-sm mb-5">
+            <div class="row g-4 g-md-5 align-items-center">
+                <div class="col-lg-6">
+                    <img src="<?php echo $product['image_url']; ?>" alt="<?php echo $product['name']; ?>" class="img-fluid rounded shadow-sm w-100">
                 </div>
-                <div class="col-md-6">
+                <div class="col-lg-6">
                     <h2 class="fw-bold mb-3"><?php echo $product['name']; ?></h2>
-                    <p class="product-price display-6 mb-4">$<?php echo $product['price']; ?></p>
+                    <p class="product-price display-6 mb-4 text-primary">MWK <?php echo number_format($product['price'], 2); ?></p>
                     <p class="lead text-muted mb-4"><?php echo $product['description']; ?></p>
-                    <button class="btn btn-primary btn-lg px-5 py-3 rounded-pill shadow-sm">Add to Cart</button>
+                    <button class="btn btn-primary btn-lg px-5 py-3 rounded-pill shadow-sm w-100 w-md-auto">Add to Cart</button>
                 </div>
             </div>
         </section>
@@ -98,7 +103,7 @@ while ($row = $res->fetchArray(SQLITE3_ASSOC)) {
             
             <?php if (isset($_SESSION['username'])): ?>
                 <div class="card border-0 shadow-sm mb-5">
-                    <div class="card-body p-4">
+                    <div class="card-body p-3 p-md-4">
                         <form method="POST">
                             <div class="mb-3">
                                 <textarea name="comment" class="form-control" placeholder="Write your review..." rows="4" required></textarea>
@@ -109,14 +114,14 @@ while ($row = $res->fetchArray(SQLITE3_ASSOC)) {
                 </div>
             <?php else: ?>
                 <div class="alert alert-info shadow-sm mb-5">
-                    <a href="login.php" class="fw-bold text-decoration-none">Login</a> to leave a review and share your thoughts.
+                    <a href="login.php" class="fw-bold text-decoration-none">Login</a> to leave a review.
                 </div>
             <?php endif; ?>
 
             <div class="comments-list">
                 <?php foreach ($comments as $c): ?>
                     <div class="card comment-card mb-4 border-0 shadow-sm">
-                        <div class="card-body p-4">
+                        <div class="card-body p-3 p-md-4">
                             <div class="d-flex justify-content-between align-items-center mb-2">
                                 <h6 class="fw-bold mb-0"><?php echo $c['username']; ?></h6>
                                 <span class="text-muted small"><?php echo $c['created_at']; ?></span>
@@ -129,16 +134,16 @@ while ($row = $res->fetchArray(SQLITE3_ASSOC)) {
                 <?php endforeach; ?>
                 <?php if (empty($comments)): ?>
                     <div class="text-center py-5 text-muted">
-                        <p class="fs-5 mb-0">No reviews yet. Be the first to review this product!</p>
+                        <p class="fs-5 mb-0">No reviews yet.</p>
                     </div>
                 <?php endif; ?>
             </div>
         </section>
     </main>
 
-    <footer class="mt-auto">
+    <footer class="mt-auto py-4">
         <div class="container text-center">
-            <p class="mb-0">&copy; 2026 Gadget Store</p>
+            <p class="mb-0 text-white-50">&copy; 2026 Gadget Store - Lilongwe, Malawi</p>
         </div>
     </footer>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
