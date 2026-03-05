@@ -17,6 +17,15 @@ $db->exec("CREATE TABLE IF NOT EXISTS products (
     image_url TEXT
 )");
 
+$db->exec("CREATE TABLE IF NOT EXISTS comments (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    product_id INTEGER,
+    username TEXT,
+    comment TEXT,
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY(product_id) REFERENCES products(id)
+)");
+
 $res = $db->querySingle("SELECT COUNT(*) FROM users");
 if ($res == 0) {
     $db->exec("INSERT INTO users (username, password, full_name, email) VALUES 

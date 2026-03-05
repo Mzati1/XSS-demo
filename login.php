@@ -30,34 +30,55 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login - Gadget Store</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <header>
+    <nav class="navbar navbar-expand-lg navbar-dark shadow-sm">
         <div class="container">
-            <h1>Gadget Store</h1>
+            <a class="navbar-brand fw-bold" href="index.php">Gadget Store</a>
         </div>
-    </header>
+    </nav>
 
-    <main class="container">
-        <section class="hero">
-            <h2>Login to your Account</h2>
-            <?php if ($error): ?>
-                <p style="color: red;"><?php echo $error; ?></p>
-            <?php endif; ?>
-            <form method="POST" class="login-form">
-                <input type="text" name="username" placeholder="Username" required style="display: block; margin: 10px auto; padding: 10px; width: 300px;">
-                <input type="password" name="password" placeholder="Password" required style="display: block; margin: 10px auto; padding: 10px; width: 300px;">
-                <button type="submit">Login</button>
-            </form>
-            <p>Try admin/admin123 or victim/password123</p>
-        </section>
-    </main>
+    <div class="container mt-5">
+        <div class="row justify-content-center">
+            <div class="col-md-5">
+                <div class="card shadow-sm border-0 rounded-3">
+                    <div class="card-body p-5">
+                        <h2 class="text-center mb-4">Login</h2>
+                        
+                        <?php if ($error): ?>
+                            <div class="alert alert-danger"><?php echo $error; ?></div>
+                        <?php endif; ?>
 
-    <footer>
-        <div class="container">
-            <p>&copy; 2026 Gadget Store</p>
+                        <form method="POST">
+                            <div class="mb-3">
+                                <label class="form-label">Username</label>
+                                <input type="text" name="username" class="form-control" required>
+                            </div>
+                            <div class="mb-4">
+                                <label class="form-label">Password</label>
+                                <input type="password" name="password" class="form-control" required>
+                            </div>
+                            <button type="submit" class="btn btn-primary w-100 py-2">Login</button>
+                        </form>
+                        <div class="text-center mt-4">
+                            <p>Don't have an account? <a href="register.php" class="text-decoration-none">Register here</a></p>
+                        </div>
+                    </div>
+                </div>
+                <div class="text-center mt-4 text-muted small">
+                    <p>Try admin/admin123 or victim/password123</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer class="mt-auto">
+        <div class="container text-center">
+            <p class="mb-0">&copy; 2026 Gadget Store</p>
         </div>
     </footer>
 </body>
