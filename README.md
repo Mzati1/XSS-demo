@@ -1,6 +1,6 @@
-# XSS Demo Lab - Gadget Store
+# XSS  Lab - Gadget Store
 
-This lab is designed to demonstrate Reflected, Stored, and DOM-based Cross-Site Scripting (XSS).
+This lab is designed to nstrate Reflected, Stored, and DOM-based Cross-Site Scripting (XSS).
 
 ## Lab Setup
 Run the built-in PHP server:

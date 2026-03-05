@@ -1,5 +1,5 @@
 document.addEventListener('DOMContentLoaded', () => {
-    console.log('Gadget Store demo lab loaded.');
+    console.log('Gadget Store  lab loaded.');
     
     const searchForm = document.querySelector('.search-form');
     if (searchForm) {
