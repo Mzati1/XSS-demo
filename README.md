@@ -1,4 +1,4 @@
-# XSS Lab - Gadget Store (Malawi Edition)
+# XSS Lab - Gadget Store
 
 This lab demonstrates Reflected, Stored, and DOM-based Cross-Site Scripting (XSS) in a modern PHP application.
 
