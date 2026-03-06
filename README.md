@@ -9,7 +9,6 @@ This lab demonstrates Reflected, Stored, and DOM-based Cross-Site Scripting (XSS
 ### Credentials
 - **Admin**: `admin` / `admin123`
 - **User**: `victim` / `password123`
-- **Currency**: Malawian Kwacha (MWK)
 
 ## Attack Scenarios
 
@@ -42,4 +41,3 @@ To test the fix:
 - **Cookies**: Use `HttpOnly` flag.
 
 ---
-**Disclaimer**: For educational use only.
