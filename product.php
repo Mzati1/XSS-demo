@@ -70,7 +70,7 @@ while ($row = $res->fetchArray(SQLITE3_ASSOC)) {
     <main class="container py-5">
         <div class="row">
             <div class="col-12">
-                <!-- DOM-BASED XSS VULNERABILITY -->
+                <!-- DOM-BASED -->
                 <div id="promo-banner" class="mb-4"></div>
                 <!-- VULNERABLE -->
                 <script>

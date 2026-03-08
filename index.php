@@ -75,7 +75,7 @@ while ($row = $res->fetchArray(SQLITE3_ASSOC)) {
 
     <footer class="mt-auto py-4">
         <div class="container text-center">
-            <p class="mb-0 text-white-50">&copy; 2026 Gadget Store - Lilongwe, Malawi</p>
+            <p class="mb-0 text-white-50">&copy; 2026 Gadget Store</p>
         </div>
     </footer>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
