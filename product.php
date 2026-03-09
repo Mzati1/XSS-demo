@@ -90,9 +90,9 @@ while ($row = $res->fetchArray(SQLITE3_ASSOC)) {
                     <img src="<?php echo $product['image_url']; ?>" alt="<?php echo $product['name']; ?>" class="img-fluid rounded shadow-sm w-100">
                 </div>
                 <div class="col-lg-6">
-                    <h2 class="fw-bold mb-3"><?php echo $product['name']; ?></h2>
+                    <h2 class="fw-bold mb-3 product-name"><?php echo $product['name']; ?></h2>
                     <p class="product-price display-6 mb-4 text-primary">MWK <?php echo number_format($product['price'], 2); ?></p>
-                    <p class="lead text-muted mb-4"><?php echo $product['description']; ?></p>
+                    <p class="lead text-muted mb-4 product-description"><?php echo $product['description']; ?></p>
                     <button class="btn btn-primary btn-lg px-5 py-3 rounded-pill shadow-sm w-100 w-md-auto">Add to Cart</button>
                 </div>
             </div>
@@ -123,11 +123,11 @@ while ($row = $res->fetchArray(SQLITE3_ASSOC)) {
                     <div class="card comment-card mb-4 border-0 shadow-sm">
                         <div class="card-body p-3 p-md-4">
                             <div class="d-flex justify-content-between align-items-center mb-2">
-                                <h6 class="fw-bold mb-0"><?php echo $c['username']; ?></h6>
+                                <h6 class="fw-bold mb-0 comment-username"><?php echo $c['username']; ?></h6>
                                 <span class="text-muted small"><?php echo $c['created_at']; ?></span>
                             </div>
                             <!-- VULNERABLE -->
-                            <p class="card-text mb-0"><?php echo $c['comment']; ?></p>
+                            <p class="card-text mb-0 comment-text"><?php echo $c['comment']; ?></p>
                             <!-- FIX: <p class="card-text mb-0"><?php echo htmlspecialchars($c['comment'], ENT_QUOTES, 'UTF-8'); ?></p> -->
                         </div>
                     </div>

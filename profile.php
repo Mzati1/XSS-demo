@@ -58,15 +58,15 @@ $msg = isset($_GET['msg']) ? $_GET['msg'] : '';
                     <div class="card-body p-4">
                         <div class="row mb-3">
                             <div class="col-sm-4 text-muted">Username</div>
-                            <div class="col-sm-8 fw-bold"><?php echo $user['username']; ?></div>
+                            <div class="col-sm-8 fw-bold profile-username"><?php echo $user['username']; ?></div>
                         </div>
                         <div class="row mb-3 border-top pt-3">
                             <div class="col-sm-4 text-muted">Full Name</div>
-                            <div class="col-sm-8 fw-bold"><?php echo $user['full_name']; ?></div>
+                            <div class="col-sm-8 fw-bold profile-full_name"><?php echo $user['full_name']; ?></div>
                         </div>
                         <div class="row mb-3 border-top pt-3">
                             <div class="col-sm-4 text-muted">Email Address</div>
-                            <div class="col-sm-8 fw-bold"><?php echo $user['email']; ?></div>
+                            <div class="col-sm-8 fw-bold profile-email"><?php echo $user['email']; ?></div>
                         </div>
                     </div>
                     <div class="card-footer bg-light p-4 border-0 text-center">

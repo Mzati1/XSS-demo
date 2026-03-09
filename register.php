@@ -65,9 +65,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         <?php endif; ?>
                         
                         <?php if ($success): ?>
-                            <!-- VULNERABLE -->
                             <div class="alert alert-success"><?php echo $success; ?></div>
-                            <!-- FIX: <div class="alert alert-success"><?php echo htmlspecialchars($success, ENT_QUOTES, 'UTF-8'); ?></div> -->
                         <?php endif; ?>
 
                         <form method="POST">
